@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সহজকার্ট ফ্যাশন | প্রিমিয়াম পাঞ্জাবি</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #000000; --secondary: #1e293b; --accent: #dc2626; --bg: #ffffff; }
+        body { font-family: 'Hind Siliguri', sans-serif; margin: 0; background: #fcfcfc; color: var(--secondary); scroll-behavior: smooth; overflow-x: hidden; }
+
+        /* Navigation */
+        nav { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: 700; color: var(--primary); letter-spacing: 1px; cursor: pointer; }
+
+        /* Page System */
+        .page { display: none; animation: slideIn 0.4s ease-out; }
+        .active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .container { padding: 20px 5%; max-width: 1200px; margin: auto; }
+
+        /* Home Page */
+        .single-product-hero { max-width: 800px; margin: 20px auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .single-product-hero img { width: 100%; aspect-ratio: 3/4; object-fit: cover; cursor: pointer; }
+        .hero-body { padding: 30px; text-align: center; }
+        .hero-body h2 { font-size: 28px; margin: 10px 0; }
+        .delivery-notice { color: #dc2626; font-weight: 600; font-size: 14px; margin-bottom: 10px; display: block; }
+
+        /* Details Page */
+        .details-container { display: grid; grid-template-columns: 1fr; gap: 20px; background: white; padding: 20px; border-radius: 20px; margin-top: 20px; }
+        @media (min-width: 768px) { .details-container { grid-template-columns: 1fr 1fr; padding: 40px; gap: 40px; } }
+
+        .main-img-box { width: 100%; aspect-ratio: 3/4; border-radius: 15px; overflow: hidden; border: 1px solid #eee; margin-bottom: 15px; }
+        .main-img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .thumb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .thumb-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; opacity: 0.6; }
+        .thumb-grid img.active { border-color: var(--primary); opacity: 1; }
+
+        .product-desc { margin: 10px 0; font-size: 14px; color: #555; background: #f8fafc; padding: 12px; border-radius: 10px; border-left: 4px solid var(--primary); }
+
+        .color-list { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        .color-item { padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.3s; border: 2px solid #f1f5f9; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .color-item.selected { border-color: var(--primary); transform: scale(1.05); }
+
+        .size-options { display: flex; gap: 10px; margin-bottom: 20px; }
+        .size-box { width: 45px; height: 40px; border: 2px solid #f1f5f9; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 14px; }
+        .size-box.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .selection-summary { background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed #cbd5e1; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 15px; }
+        .summary-total { border-top: 1px solid #e2e8f0; padding-top: 8px; font-weight: 700; color: var(--accent); font-size: 17px; }
+
+        .order-box { max-width: 500px; margin: 20px auto; background: white; padding: 30px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        input, select { width: 100%; padding: 14px; margin-bottom: 10px; border: 1.5px solid #f1f5f9; border-radius: 12px; font-family: inherit; font-size: 15px; outline: none; box-sizing: border-box; }
+        .input-helper { font-size: 11px; color: #64748b; margin-bottom: 15px; display: block; }
+
+        .btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; }
+        .btn-primary { background: var(--primary); color: white; }
+        
+        /* Custom Popup Styles */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-content i { font-size: 50px; color: #22c55e; margin-bottom: 15px; }
+        .modal-content h3 { margin: 10px 0; font-size: 22px; color: #000; }
+        .modal-content p { color: #64748b; line-height: 1.6; margin-bottom: 20px; }
+
+        footer { text-align: center; padding: 40px; color: #94a3b8; font-size: 13px; }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { color: var(--secondary); text-decoration: none; font-weight: 600; cursor: pointer; margin: 0 15px; }
+        .fb-link { color: #1877f2 !important; display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
+
+        .policy-content { background: white; padding: 30px; border-radius: 20px; line-height: 1.8; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo" onclick="showPage('home')">SOHOJCART</div>
+</nav>
+
+<div id="successModal" class="modal-overlay">
+    <div class="modal-content">
+        <i class="fas fa-check-circle"></i>
+        <h3>অভিনন্দন!</h3>
+        <p id="modalMsg">আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে। অর্ডারটি কনফার্ম করার জন্য আমরা খুব শীঘ্রই আপনার সাথে যোগাযোগ করবো। ধন্যবাদ!</p>
+        <button class="btn btn-primary" onclick="closeModal()">ঠিক আছে</button>
+    </div>
+</div>
+
+<div id="home" class="page active">
+    <div class="container">
+        <div class="single-product-hero" onclick="openDetails('প্রিমিয়াম পাঞ্জাবি কালেকশন', '৮৫০')">
+            <img src="kalo.jpg">
+            <div class="hero-body">
+                <span class="delivery-notice">পছন্দমতো সাইজ ও কালার বেছে নিন</span>
+                <h2 style="font-weight: 600;">প্রিমিয়াম কটন পাঞ্জাবি</h2>
+                <div class="price-tag" style="font-size: 24px;">৳ ৮৫০</div>
+                <button class="btn btn-primary" style="width: auto; padding: 15px 40px; margin-top: 15px;">অর্ডার করুন</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="details" class="page">
+    <div class="container">
+        <button onclick="showPage('home')" style="border:none; background:none; font-weight:700; cursor:pointer; margin-bottom:10px; color: #64748b;">← ফিরে যান</button>
+        <div class="details-container">
+            <div class="img-section">
+                <div class="main-img-box">
+                    <img id="mainImg" src="kalo.jpg">
+                </div>
+                <div class="thumb-grid" id="thumbGrid"></div>
+            </div>
+            <div class="info-section">
+                <h1 id="detTitle" style="margin:0; font-size: 24px; font-weight: 600; color: #000;"></h1>
+                <div class="price-tag" style="font-size: 24px; margin: 5px 0;">৳ <span id="detPrice"></span></div>
+                
+                <div class="product-desc">
+                    - আরামদায়ক প্রিমিয়াম কটন ফেব্রিক্স।<br>
+                    - আকর্ষণীয় এবং আধুনিক ডিজাইন।
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <span style="font-weight:700; display:block; margin-bottom:8px; font-size: 14px;">রঙ পছন্দ করুন:</span>
+                    <div class="color-list" id="colorList">
+                        <div class="color-item selected" data-color="কালো" data-img="kalo.jpg" style="background: #111;" onclick="selectColor(this)">কালো</div>
+                        <div class="color-item" data-color="নেভি ব্লু" data-img="nevy.jpg" style="background: #1e3a8a;" onclick="selectColor(this)">নেভি ব্লু</div>
+                        <div class="color-item" data-color="মেরুন" data-img="merun.jpg" style="background: #7f1d1d;" onclick="selectColor(this)">মেরুন</div>
+                        <div class="color-item" data-color="আকাশি" data-img="akashi.jpg" style="background: #7dd3fc; color: #333;" onclick="selectColor(this)">আকাশি</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <span style="font-weight:700; display:block; margin-bottom:8px; font-size: 14px;">সাইজ সিলেক্ট করুন:</span>
+                    <div class="size-options">
+                        <div class="size-box" onclick="selectSize(this)">৪০</div>
+                        <div class="size-box selected" onclick="selectSize(this)">৪২</div>
+                        <div class="size-box" onclick="selectSize(this)">৪৪</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="goToOrderPage()" style="margin-top: 15px;">অর্ডার করুন</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="order" class="page">
+    <div class="container">
+        <div class="order-box">
+            <h2 style="text-align:center; margin-bottom:20px; font-weight: 600;">অর্ডার ফরম</h2>
+            <div class="selection-summary">
+                <div class="summary-item"><span>কালার:</span> <span id="sumColor" style="font-weight:600;">কালো</span></div>
+                <div class="summary-item"><span>সাইজ:</span> <span id="sumSize" style="font-weight:600;">৪২</span></div>
+                <div class="summary-item"><span>ডেলিভারি চার্জ:</span> <span id="sumDelivery" style="font-weight:600;">৳ ০</span></div>
+                <div class="summary-item summary-total"><span>মোট বিল:</span> <span id="sumTotal">৳ ৮৫০</span></div>
+            </div>
+            
+            <form id="orderForm">
+                <input type="text" name="name" id="userName" placeholder="আপনার পুরো নাম" required>
+                <input type="tel" name="number" id="userNumber" placeholder="মোবাইল নম্বর (১১ ডিজিট)" pattern="01[3-9][0-9]{8}" title="অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (০১ দিয়ে শুরু)" required>
+                
+                <select name="location" id="locationSelect" onchange="updateDelivery()" required>
+                    <option value="">ডেলিভারি এরিয়া সিলেক্ট করুন</option>
+                    <option value="Dhaka">ঢাকার ভিতরে (১০০ টাকা)</option>
+                    <option value="Outside">ঢাকার বাইরে (১২০ টাকা)</option>
+                </select>
+
+                <input type="text" name="gram" id="userGram" placeholder="গ্রাম/মহল্লা/বিস্তারিত ঠিকানা" required>
+                <span class="input-helper">ডেলিভারির জন্য আপনার সঠিক ঠিকানা এখানে লিখুন।</span>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="text" name="thana" id="userThana" placeholder="থানা" required>
+                    <input type="text" name="jela" id="userJela" placeholder="জেলা" required>
+                </div>
+                
+                <input type="hidden" name="color" id="sheetColor">
+                <input type="hidden" name="size" id="sheetSize">
+                <input type="hidden" name="delivery_charge" id="sheetDelivery">
+
+                <div style="background: #f1f5f9; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; font-weight: 600;">
+                    ✅ ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে টাকা দিন)
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary">অর্ডার কনফার্ম</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="policy" class="page">
+    <div class="container">
+        <button onclick="showPage('home')" style="border:none; background:none; font-weight:700; cursor:pointer; margin-bottom:10px; color: #64748b;">← ফিরে যান</button>
+        <div class="policy-content">
+            <h2>ডেলিভারি ও রিটার্ন পলিসি</h2>
+            <ul>
+                <li><strong>ডেলিভারি চার্জ:</strong> ঢাকার ভিতরে ১০০ টাকা এবং ঢাকার বাইরে ১২০ টাকা।</li>
+                <li><strong>ডেলিভারি সময়:</strong> আমরা সাধারণত ৩ কার্যদিবসের মধ্যে সারা বাংলাদেশে ডেলিভারি করে থাকি।</li>
+                <li><strong>বিশেষ ঘোষণা:</strong> দেশের বিশেষ কোনো দুর্যোগ বা অস্থিরতা থাকলে ডেলিভারি কিছুটা দেরি হতে পারে। আমরা আপনার ধৈর্য কামনা করছি।</li>
+                <li><strong>পণ্য চেক:</strong> ডেলিভারি ম্যানের সামনে পণ্য চেক করে বুঝে নিবেন। সাইজ বা কালারে সমস্যা থাকলে সাথে সাথে রিটার্ন করতে পারবেন।</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-links">
+        <a onclick="showPage('policy')">ডেলিভারি পলিসি</a>
+        <a href="https://www.facebook.com/share/1987BqeghT/" target="_blank" class="fb-link">
+            <i class="fab fa-facebook"></i> যোগাযোগ করুন
+        </a>
+    </div>
+    &copy; ২০২৬ সহজকার্ট - কোয়ালিটি ফ্যাশন
+</footer>
+
+<script>
+    let selectedColor = "কালো";
+    let selectedSize = "৪২";
+    let basePrice = 850;
+    let deliveryCharge = 0;
+
+    const colorImages = {
+        "kalo.jpg": "কালো",
+        "nevy.jpg": "নেভি ব্লু",
+        "merun.jpg": "মেরুন",
+        "akashi.jpg": "আকাশি"
+    };
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function updateDelivery() {
+        const location = document.getElementById('locationSelect').value;
+        if (location === "Dhaka") deliveryCharge = 100;
+        else if (location === "Outside") deliveryCharge = 120;
+        else deliveryCharge = 0;
+
+        document.getElementById('sumDelivery').innerText = "৳ " + deliveryCharge;
+        document.getElementById('sumTotal').innerText = "৳ " + (basePrice + deliveryCharge);
+        document.getElementById('sheetDelivery').value = deliveryCharge;
+    }
+
+    function openDetails(name, price) {
+        document.getElementById('detTitle').innerText = name;
+        document.getElementById('detPrice').innerText = basePrice;
+        const grid = document.getElementById('thumbGrid');
+        grid.innerHTML = '';
+        Object.keys(colorImages).forEach((src) => {
+            const img = document.createElement('img');
+            img.src = src;
+            if(src === document.getElementById('mainImg').src) img.className = 'active';
+            img.onclick = () => {
+                document.getElementById('mainImg').src = src;
+                document.querySelectorAll('.thumb-grid img').forEach(t => t.classList.remove('active'));
+                img.classList.add('active');
+                const colorName = colorImages[src];
+                document.querySelectorAll('.color-item').forEach(item => {
+                    item.classList.remove('selected');
+                    if(item.getAttribute('data-color') === colorName) {
+                        item.classList.add('selected');
+                        selectedColor = colorName;
+                    }
+                });
+            };
+            grid.appendChild(img);
+        });
+        showPage('details');
+    }
+
+    function selectColor(el) {
+        document.querySelectorAll('.color-item').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedColor = el.getAttribute('data-color');
+        const img = el.getAttribute('data-img');
+        document.getElementById('mainImg').src = img;
+    }
+
+    function selectSize(el) {
+        document.querySelectorAll('.size-box').forEach(s => s.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedSize = el.innerText;
+    }
+
+    function goToOrderPage() {
+        document.getElementById('sumColor').innerText = selectedColor;
+        document.getElementById('sumSize').innerText = selectedSize;
+        updateDelivery();
+        document.getElementById('sheetColor').value = selectedColor;
+        document.getElementById('sheetSize').value = selectedSize;
+        showPage('order');
+    }
+
+    function openModal() {
+        document.getElementById('successModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('successModal').style.display = 'none';
+        showPage('home');
+    }
+
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxABfR47UJHHMy7DBIPsqGwSE7cgY7yC8PSI5U5ErE3IDaOXJtq1ITB9VUGlC4Kr1b3-w/exec';
+    const form = document.getElementById('orderForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+
+        // Address Validation Logic
+        const gram = document.getElementById('userGram').value.trim();
+        const thana = document.getElementById('userThana').value.trim();
+        const jela = document.getElementById('userJela').value.trim();
+        const num = document.getElementById('userNumber').value.trim();
+
+        // 1. Check if number is exactly 11 digits and starts with 01
+        if (!/^01[3-9][0-9]{8}$/.test(num)) {
+            alert('সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন। (যেমন: 017xxxxxxxx)');
+            return;
+        }
+
+        // 2. Check if address fields are too short (less than 3 chars)
+        if (gram.length < 3 || thana.length < 3 || jela.length < 3) {
+            alert('অনুগ্রহ করে বিস্তারিত ও সঠিক ঠিকানা প্রদান করুন।');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "অর্ডারটি প্রসেস হচ্ছে...";
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form), mode: 'no-cors'})
+            .then(() => {
+                openModal();
+                submitBtn.disabled = false;
+                submitBtn.innerText = "অর্ডার কনফার্ম";
+                form.reset();
+            })
+            .catch(error => {
+                alert('দুঃখিত, অর্ডার নিতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "অর্ডার কনফার্ম";
+            });
+    });
+</script>
+</body>
+</html>
